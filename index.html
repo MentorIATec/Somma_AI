@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Somma - Tu Coach Virtual SMART</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 3em;
+            margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #666;
+            font-size: 1.1em;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .result {
+            display: none;
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0e6ff 100%);
+            border-radius: 15px;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .result.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .result-title {
+            color: #333;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .result-content {
+            color: #444;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            font-size: 0.95em;
+        }
+
+        .result-content h2, 
+        .result-content h3 {
+            color: #667eea;
+            margin: 20px 0 10px;
+        }
+
+        .result-content strong {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .result-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .result-content li {
+            margin: 5px 0;
+        }
+
+        .action-buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 12ندگی px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .error {
+            display: none;
+            padding: 15px;
+            background: #fee;
+            border: 1px solid #fcc;
+            border-radius: 10px;
+            color: #c33;
+            margin-top: 20px;
+            animation: shake 0.5s;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🎯</div>
+            <h1>Somma</h1>
+            <p class="subtitle">Tu Coach Virtual SMART<br>Transforma tus metas en planes de acción claros</p>
+        </div>
+
+        <form id="metaForm">
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" required placeholder="¿Cómo te llamas?">
+            </div>
+
+            <div class="form-group">
+                <label for="matricula">Matrícula</label>
+                <input type="text" id="matricula" name="matricula" required placeholder="Tu número de matrícula">
+            </div>
+
+            <div class="form-group">
+                <label for="meta">Describe una meta que tengas o un área en la que te gustaría mejorar</label>
+                <textarea id="meta" name="meta" required 
+                    placeholder="Ejemplo: Quiero mejorar mis calificaciones, quiero hacer más ejercicio, quiero aprender a programar, etc."></textarea>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                Transformar mi Meta 🚀
+            </button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p class="loading-text">Somma está analizando tu meta y creando un plan personalizado...</p>
+        </div>
+
+        <div class="error" id="error">
+            <strong>¡Ups!</strong> <span id="errorMessage"></span>
+        </div>
+
+        <div class="result" id="result">
+            <div class="result-header">
+                <h2 class="result-title">🎯 Tu Meta SMART</h2>
+            </div>
+            <div class="result-content" id="resultContent"></div>
+            <div class="action-buttons">
+                <button class="btn-secondary" onclick="copiarResultado()">📋 Copiar</button>
+                <button class="btn-secondary" onclick="nuevaMeta()">✨ Nueva Meta</button>
+                <button class="btn-secondary" onclick="window.print()">🖨️ Imprimir</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>💡 Recuerda: Los grandes logros son la suma de pequeños pasos consistentes</p>
+        </div>
+    </div>
+
+    <script>
+        // Manejar el envío del formulario
+        document.getElementById('metaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Obtener valores del formulario
+            const nombre = document.getElementById('nombre').value.trim();
+            const matricula = document.getElementById('matricula').value.trim();
+            const metaOriginal = document.getElementById('meta').value.trim();
+            
+            // Validación básica
+            if (!nombre || !matricula || !metaOriginal) {
+                mostrarError('Por favor completa todos los campos');
+                return;
+            }
+            
+            // Ocultar elementos previos
+            ocultarError();
+            ocultarResultado();
+            
+            // Mostrar loading y deshabilitar botón
+            mostrarLoading();
+            document.getElementById('submitBtn').disabled = true;
+            
+            try {
+                // Llamar a la función del servidor
+                google.script.run
+                    .withSuccessHandler(manejarRespuesta)
+                    .withFailureHandler(manejarError)
+                    .procesarMeta({
+                        nombre: nombre,
+                        matricula: matricula,
+                        metaOriginal: metaOriginal
+                    });
+            } catch (error) {
+                manejarError(error);
+            }
+        });
+
+        function manejarRespuesta(response) {
+            ocultarLoading();
+            document.getElementById('submitBtn').disabled = false;
+            
+            if (response.success) {
+                // Mostrar el resultado
+                document.getElementById('resultContent').innerHTML = formatearResultado(response.metaSMART);
+                mostrarResultado();
+                
+                // Scroll suave hacia el resultado
+                document.getElementById('result').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            } else {
+                mostrarError(response.error || 'Ocurrió un error al procesar tu meta');
+            }
+        }
+
+        function manejarError(error) {
+            ocultarLoading();
+            document.getElementById('submitBtn').disabled = false;
+            mostrarError('Error de conexión. Por favor intenta nuevamente.');
+            console.error('Error:', error);
+        }
+
+        function formatearResultado(texto) {
+            // Convertir el texto plano en HTML formateado
+            return texto
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/### (.*?)$/gm, '<h3>$1</h3>')
+                .replace(/## (.*?)$/gm, '<h2>$1</h2>')
+                .replace(/# (.*?)$/gm, '<h1>$1</h1>')
+                .replace(/• /g, '• ')
+                .replace(/---/g, '<hr>');
+        }
+
+        function mostrarLoading() {
+            document.getElementById('loading').classList.add('active');
+        }
+
+        function ocultarLoading() {
+            document.getElementById('loading').classList.remove('active');
+        }
+
+        function mostrarResultado() {
+            document.getElementById('result').classList.add('active');
+        }
+
+        function ocultarResultado() {
+            document.getElementById('result').classList.remove('active');
+        }
+
+        function mostrarError(mensaje) {
+            document.getElementById('errorMessage').textContent = mensaje;
+            document.getElementById('error').classList.add('active');
+        }
+
+        function ocultarError() {
+            document.getElementById('error').classList.remove('active');
+        }
+
+        function copiarResultado() {
+            const contenido = document.getElementById('resultContent').innerText;
+            navigator.clipboard.writeText(contenido).then(() => {
+                alert('¡Meta SMART copiada al portapapeles! 📋');
+            }).catch(err => {
+                console.error('Error al copiar:', err);
+                alert('No se pudo copiar. Selecciona el texto manualmente.');
+            });
+        }
+
+        function nuevaMeta() {
+            // Limpiar formulario
+            document.getElementById('metaForm').reset();
+            
+            // Ocultar resultado y errores
+            ocultarResultado();
+            ocultarError();
+            
+            // Scroll al inicio
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Enfocar primer campo
+            document.getElementById('nombre').focus();
+        }
+    </script>
+</body>
+</html>
